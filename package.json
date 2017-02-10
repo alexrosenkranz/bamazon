@@ -1,0 +1,23 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "Week 12 HW - Bamazon with Node &amp; MySQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexrosenkranz/bamazon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexrosenkranz/bamazon/issues"
+  },
+  "homepage": "https://github.com/alexrosenkranz/bamazon#readme",
+  "dependencies": {
+    "inquirer": "^3.0.1",
+    "mysql": "^2.13.0"
+  }
+}
