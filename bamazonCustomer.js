@@ -56,6 +56,7 @@ function makePurchase() {
                     let newStock = selectedProduct.stock_quantity - data.quantity;
                     connection.query('UPDATE products SET stock_quantity = ' + newStock + ' WHERE id = ' + id, function(error, results, fields) {
                         console.log('Congrats on your order');
+                        addSale(id, data.quantity);
                         newPurchase();
                     });
                 } else {
@@ -66,6 +67,16 @@ function makePurchase() {
 
 
         });
+    });
+}
+
+function addSale(product_id, quantity_purchased) {
+    connection.query('INSERT INTO sales (product_id, quantity_purchased) VALUES (' + product_id + ',' + quantity_purchased + ')', function(error, results, fields) {
+        if (!error) {
+            console.log("Sales sheet successfully updated");
+        } else {
+            console.log("Something went wrong with creating the sale");
+        }
     });
 }
 
