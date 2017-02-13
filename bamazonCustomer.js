@@ -20,6 +20,7 @@ function queryProducts() {
             console.log(results[i].product_name + ' || Price: $' + results[i].price + ' || ID: ' + results[i].id);
             console.log('---------');
         }
+        makePurchase();
     });
 }
 
@@ -43,18 +44,31 @@ function makePurchase() {
             return regexp.test(value) ? true : "Please enter a number, no letters.";
         }
     }]).then(function(data) {
-        connection.query('SELECT * FROM products WHERE id LIKE ' + data.id, function(error, results, fields) {
+        let id = parseInt(data.id);
+        connection.query('SELECT * FROM products WHERE id = ' + id, function(error, results, fields) {
             if (error) {
                 console.log('Sorry, none of our records match this product ID.');
                 newPurchase();
             } else {
-                // if (data.)
+                let selectedProduct = results[0];
+
+                if (data.quantity < selectedProduct.stock_quantity) {
+                    let newStock = selectedProduct.stock_quantity - data.quantity;
+                    connection.query('UPDATE products SET stock_quantity = ' + newStock + ' WHERE id = ' + id, function(error, results, fields) {
+                        console.log('Congrats on your order');
+                        newPurchase();
+                    });
+                } else {
+                    console.log("There's not enough in stock to fulfill your order, please try again with a lesser amount or order a different product.");
+                    newPurchase();
+                }
             }
 
 
         });
     });
 }
+
 
 function newPurchase() {
     inquirer.prompt([{
@@ -67,6 +81,7 @@ function newPurchase() {
             makePurchase();
         } else {
             console.log('Thank you for shopping!');
+            connection.end();
         }
     });
 }
