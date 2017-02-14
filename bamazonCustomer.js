@@ -57,10 +57,11 @@ function makePurchase() {
             } else {
                 let selectedProduct = results[0];
 
-                if (data.quantity < selectedProduct.stock_quantity) {
+                if (data.quantity <= selectedProduct.stock_quantity) {
                     let newStock = selectedProduct.stock_quantity - data.quantity;
                     connection.query('UPDATE products SET stock_quantity = ' + newStock + ' WHERE id = ' + id, function(error, results, fields) {
-                        console.log('Congrats on your order');
+                        let totalCost = parseFloat(selectedProduct.price) * parseFloat(data.quantity);
+                        console.log('Congrats on your order! Your total is: ' + totalCost);
                         addSale(id, data.quantity);
                         newPurchase();
                     });
