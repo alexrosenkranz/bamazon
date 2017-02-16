@@ -24,7 +24,7 @@ function supervisorMenu() {
             "Create New Department",
         ]
     }]).then(function(data) {
-        console.log(data.action);
+
         switch (data.action) {
             case "View Product Sales by Department":
                 productSales();
@@ -41,6 +41,8 @@ supervisorMenu();
 function productSales() {
     connection.query('SELECT departments.id, department_name, over_head_costs, SUM(products.price * sales.quantity_purchased) AS product_sales, (SUM(products.price * sales.quantity_purchased) - over_head_costs) AS total_profit FROM departments, products, sales WHERE products.id = sales.product_id AND departments.id = products.department_id GROUP BY departments.id', function(error, results, fields) {
         if (error) return error;
+        console.log('Sales by department.');
+        console.log('===========');
         console.table(results);
         console.log('===========');
         returnToMenu();

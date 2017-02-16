@@ -20,6 +20,7 @@ function queryProducts() {
         console.log('===========');
 
         console.table(results);
+        console.log('===========');
         makePurchase();
     });
 }
@@ -58,10 +59,12 @@ function makePurchase() {
                         let totalCost = parseFloat(selectedProduct.price) * parseFloat(data.quantity);
                         console.log('Congrats on your order! Your total is: ' + totalCost);
                         addSale(id, data.quantity);
+                        console.log('===========');
                         newPurchase();
                     });
                 } else {
                     console.log("There's not enough in stock to fulfill your order, please try again with a lesser amount or order a different product.");
+                    console.log('===========');
                     newPurchase();
                 }
             }
@@ -75,8 +78,10 @@ function addSale(product_id, quantity_purchased) {
     connection.query('INSERT INTO sales (product_id, quantity_purchased) VALUES (' + product_id + ',' + quantity_purchased + ')', function(error, results, fields) {
         if (!error) {
             console.log("Sales sheet successfully updated");
+            console.log('===========');
         } else {
             console.log("Something went wrong with creating the sale");
+            console.log('===========');
         }
     });
 }
