@@ -10,10 +10,10 @@ Run your own online retail giant through the command line. With Bamazon, you hav
 
 - node bamazonSupervisor.js allows you to create a sales sheet by department or add another department
 
-![Bamazon Gif] (https://github.com/alexrosenkranz/bamazon/blob/master/gif/bamazon_customer.gif)
+![Bamazon Gif] (https://github.com/alexrosenkranz/bamazon/blob/master/gifs/bamazon_customer.gif)
 
-![Bamazon Gif 2] (https://github.com/alexrosenkranz/bamazon/blob/master/gif/bamazon_manager1.gif)
+![Bamazon Gif 2] (https://github.com/alexrosenkranz/bamazon/blob/master/gifs/bamazon_manager1.gif)
 
-![Bamazon Gif 3] (https://github.com/alexrosenkranz/bamazon/blob/master/gif/bamazon_supervisor1.gif)
+![Bamazon Gif 3] (https://github.com/alexrosenkranz/bamazon/blob/master/gifs/bamazon_supervisor1.gif)
 
 
