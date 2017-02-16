@@ -1,8 +1,8 @@
 var inquirer = require('inquirer');
 var mysql = require('mysql');
-var Table = require('cli-table');
-var color = require('colors');
+var table = require('console.table');
 var productList = [];
+var deptList = [];
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -26,10 +26,11 @@ function managerMenu() {
             new inquirer.Separator(),
             "Add To Inventory",
             new inquirer.Separator(),
-            "Add New Product"
+            "Add New Product",
+            new inquirer.Separator(),
+            "Exit"
         ]
     }]).then(function(data) {
-        console.log(data.action);
         switch (data.action) {
             case "View Products for Sale":
                 showProducts();
@@ -43,6 +44,10 @@ function managerMenu() {
             case "Add New Product":
                 addProduct();
                 break;
+            case "Exit":
+                console.log('Enjoy your day!');
+                connection.end();
+                break;
         }
     });
 }
@@ -50,35 +55,27 @@ function managerMenu() {
 managerMenu();
 
 function showProducts() {
-    var table = new Table({
-        head: ['Id', 'Product Name', 'Price', 'Qty'],
-    });
+
     connection.query('SELECT id, product_name, price, stock_quantity FROM products', function(error, results, fields) {
         if (error) throw error;
 
         console.log('PRODUCTS FOR SALE');
         console.log('===========');
-        for (var i = 0; i < results.length; i++) {
-            table.push([results[i].id, results[i].product_name, results[i].price, results[i].stock_quantity]);
-        }
-        console.log(table.toString());
+
+        console.table(results);
         returnToMenu();
     });
 }
 
 function lowInventory() {
-    var table = new Table({
-        head: ['Id', 'Product Name', 'Price', 'Qty'],
-    });
+
     connection.query('SELECT id, product_name, price, stock_quantity FROM products WHERE stock_quantity < 5', function(error, results, fields) {
         if (error) throw error;
 
-        console.log('PRODUCTS FOR SALE');
+        console.log('PRODUCTS WITH LOW STOCK');
         console.log('===========');
-        for (var i = 0; i < results.length; i++) {
-            table.push([results[i].id, results[i].product_name, results[i].price, results[i].stock_quantity]);
-        }
-        console.log(table.toString());
+
+        console.table(results);
         returnToMenu();
     });
 }
@@ -125,39 +122,51 @@ function updateInventory() {
 }
 
 function addProduct() {
-    inquirer.prompt([{
-        type: "input",
-        name: "name",
-        message: "What is the name of your product?",
-    }, {
-        type: "list",
-        name: "dept",
-        message: "What department does your product belong to?",
-        choices: ["Home Automation", "Music", "Sporting Equipment"]
-    }, {
-        type: "input",
-        name: "price",
-        message: "What is the price of your product?",
-    }, {
-        type: "input",
-        name: "quantity",
-        message: "How much of this product do you have (quantity)?",
-    }]).then(function(data) {
-        let dept;
-        if (data.dept == "Home Automation") {
-            dept = 1;
-        } else if (data.dept == "Music") {
-            dept = 2;
-        } else if (data.dept == "Sporting Equipment") {
-            dept = 3;
+    connection.query('SELECT id, department_name FROM departments', function(error, res, fields) {
+        if (error) throw error;
+        deptList = [];
+        for (var i = 0; i < res.length; i++) {
+            deptList.push(res[i].department_name);
         }
-        console.log(dept);
-        connection.query('INSERT INTO products (product_name, department_id, price, stock_quantity) VALUES ("' + data.name + '",' + dept + ',' + data.price + ',' + data.quantity + ')', function(error, results, fields) {
-            if (error) return error;
-            console.log('New product (' + data.name + ') created!');
-            returnToMenu();
-        });
+        inquirer.prompt([{
+            type: "input",
+            name: "name",
+            message: "What is the name of your product?",
+        }, {
+            type: "list",
+            name: "dept",
+            message: "What department does your product belong to?",
+            choices: deptList
+        }, {
+            type: "input",
+            name: "price",
+            message: "What is the price of your product?",
+        }, {
+            type: "input",
+            name: "quantity",
+            message: "How much of this product do you have (quantity)?",
+        }]).then(function(data) {
+            let dept;
 
+            for (var i = 0; i < res.length; i++) {
+                if (data.dept === res[i].department_name) {
+                    dept = res[i].id;
+                }
+            }
+            console.log(dept);
+            connection.query('INSERT INTO products SET ?', {
+                product_name: data.name,
+                department_id: dept,
+                price: data.price,
+                stock_quantity: data.quantity
+            }, function(error, results, fields) {
+                if (error) return error;
+                console.log('New product (' + data.name + ') created!');
+                console.log('===========');
+                returnToMenu();
+            });
+
+        });
     });
 }
 

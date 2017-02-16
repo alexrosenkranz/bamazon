@@ -1,7 +1,6 @@
 var inquirer = require('inquirer');
 var mysql = require('mysql');
-var Table = require('cli-table');
-var color = require('colors');
+var table = require('console.table');
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -16,15 +15,11 @@ connection.connect();
 function queryProducts() {
     connection.query('SELECT id, product_name, price FROM products', function(error, results, fields) {
         if (error) throw error;
-        var table = new Table({
-            head: ['Id', 'Product Name', 'Price'],
-        });
+
         console.log('PRODUCTS FOR SALE');
         console.log('===========');
-        for (var i = 0; i < results.length; i++) {
-            table.push([results[i].id, results[i].product_name, results[i].price]);
-        }
-        console.log(table.toString());
+
+        console.table(results);
         makePurchase();
     });
 }
