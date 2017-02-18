@@ -141,6 +141,10 @@ function addProduct() {
             type: "input",
             name: "price",
             message: "What is the price of your product?",
+            validate: function(value) {
+                var regexp = /^[0-9]+([,.][0-9]+)?$/g;
+                return regexp.test(value.toLowerCase()) ? true : "Please enter a number, no letters.";
+            }
         }, {
             type: "input",
             name: "quantity",

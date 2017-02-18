@@ -69,7 +69,7 @@ function createDept() {
             name: 'costs',
             message: "What's the overhead cost of running this department?",
             validate: function(value) {
-                var regexp = /^\d+$/;
+                var regexp = /^[0-9]+([,.][0-9]+)?$/g;
                 return regexp.test(value.toLowerCase()) ? true : "Please enter a number, no letters.";
             }
         }]).then(function(data) {
