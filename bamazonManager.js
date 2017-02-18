@@ -157,7 +157,6 @@ function addProduct() {
                     dept = res[i].id;
                 }
             }
-            console.log(dept);
             connection.query('INSERT INTO products SET ?', {
                 product_name: data.name,
                 department_id: dept,
